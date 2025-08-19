@@ -90,3 +90,19 @@ networks:
 
 volumes:
   model-cache:
+    
+    # --- Volume NFS pour les uploads Immich ---
+  immich_uploads:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=${NFS_SERVER},${NFS_OPTS}"
+      device: ":${NFS_UPLOADS_PATH}"
+
+  # --- (option) Volume NFS pour dumps DB ---
+  # immich_db_backups:
+  #   driver: local
+  #   driver_opts:
+  #     type: "nfs"
+  #     o: "addr=${NFS_SERVER},${NFS_OPTS}"
+  #     device: ":${NFS_DB_BACKUP_PATH}"
