@@ -29,6 +29,9 @@ services:
     restart: always
     healthcheck:
       disable: false
+    networks:
+      - immich_net
+      - proxy
 
   immich-machine-learning:
     container_name: immich_machine_learning
@@ -40,6 +43,8 @@ services:
     #   service: cpu # set to one of [armnn, cuda, rocm, openvino, openvino-wsl, rknn] for accelerated inference - use the `-wsl` version for WSL2 where applicable
     volumes:
       - model-cache:/cache
+    networks:
+      - immich_net
 
     restart: always
     healthcheck:
@@ -51,6 +56,8 @@ services:
     healthcheck:
       test: redis-cli ping || exit 1
     restart: always
+    networks:
+      - immich_net
 
   database:
     container_name: immich_postgres
@@ -67,6 +74,19 @@ services:
       - ${DB_DATA_LOCATION}:/var/lib/postgresql/data
     shm_size: 128mb
     restart: always
+    networks:
+      - immich_net
+
+networks:
+  # réseau interne dédié à Immich
+  immich_net:
+    name: immich_net
+    driver: bridge
+  # réseau externe partagé par ton reverse-proxy
+  proxy:
+    external: true
+    name: proxy
+
 
 volumes:
   model-cache:
