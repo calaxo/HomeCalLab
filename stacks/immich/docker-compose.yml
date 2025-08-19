@@ -93,11 +93,8 @@ volumes:
     
     # --- Volume NFS pour les uploads Immich ---
   immich_uploads:
-    driver: local
-    driver_opts:
-      type: "nfs"
-      o: "addr=${NFS_SERVER},${NFS_OPTS}"
-      device: ":${NFS_UPLOADS_PATH}"
+    external: true
+      
 
   # --- (option) Volume NFS pour dumps DB ---
   # immich_db_backups:
