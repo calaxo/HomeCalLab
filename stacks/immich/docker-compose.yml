@@ -18,8 +18,8 @@ services:
     #   service: cpu # set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding
     volumes:
       # Do not edit the next line. If you want to change the media storage location on your system, edit the value of UPLOAD_LOCATION in the .env file
-      - immich_uploads/internal:/data
-      - immich_uploads/upload:/data2/upload
+      - immich_internal:/data
+      - immich_uploads:/data2/upload
       - /etc/localtime:/etc/localtime:ro
 
     ports:
@@ -94,6 +94,8 @@ volumes:
     
     # --- Volume NFS pour les uploads Immich ---
   immich_uploads:
+    external: true
+  immich_internal:
     external: true
       
 
