@@ -81,7 +81,7 @@ services:
       - immich_net
 
   pgadmin4:
-    image: elestio/pgadmin:latest
+    image: elestio/pgadmin
     restart: always
     environment:
       PGADMIN_DEFAULT_EMAIL: ${ADMIN_EMAIL}
