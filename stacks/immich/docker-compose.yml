@@ -80,6 +80,19 @@ services:
     networks:
       - immich_net
 
+  pgadmin4:
+        image: elestio/pgadmin:latest
+        restart: always
+        environment:
+        PGADMIN_DEFAULT_EMAIL: ${ADMIN_EMAIL}
+        PGADMIN_DEFAULT_PASSWORD: ${ADMIN_PASSWORD}
+        PGADMIN_LISTEN_PORT: 8080
+        ports:
+        - "8080:8080"
+        volumes:
+        - ./servers.json:/pgadmin4/servers.json
+        
+
 networks:
   # réseau interne dédié à Immich
   immich_net:
