@@ -13,8 +13,8 @@ services:
   immich-server:
     container_name: immich_server
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
-    # environment:
-    #   - DB_SKIP_MIGRATIONS=true
+    environment:
+      - DB_SKIP_MIGRATIONS=true
     # extends:
     #   file: hwaccel.transcoding.yml
     #   service: cpu # set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding
@@ -77,6 +77,7 @@ services:
       # Do not edit the next line. If you want to change the database storage location on your system, edit the value of DB_DATA_LOCATION in the .env file
       - ${DB_DATA_LOCATION}:/var/lib/postgresql/data
       - immich_backups:/backup:ro 
+      - pgdata:/var/lib/postgresql/data
     shm_size: 128mb
     restart: always
     networks:
@@ -120,6 +121,8 @@ volumes:
     external: true
   immich_backups:
     external: true
+  pgdata:
+    
       
 
   # --- (option) Volume NFS pour dumps DB ---
