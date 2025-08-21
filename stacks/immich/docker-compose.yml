@@ -113,6 +113,8 @@ volumes:
     external: true
   immich_internal:
     external: true
+  immich_backups:
+    external: true
       
 
   # --- (option) Volume NFS pour dumps DB ---
