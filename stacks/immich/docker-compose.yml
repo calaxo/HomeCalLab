@@ -22,6 +22,7 @@ services:
       # Do not edit the next line. If you want to change the media storage location on your system, edit the value of UPLOAD_LOCATION in the .env file
       - immich_internal:/data
       - immich_uploads:/data2/upload
+      - immich_backups:/data/backups
       - /etc/localtime:/etc/localtime:ro
 
     ports:
