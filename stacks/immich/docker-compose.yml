@@ -93,6 +93,9 @@ services:
       - "8080:8080"
     volumes:
       - ./servers.json:/pgadmin4/servers.json
+    networks:
+      - immich_net
+      - proxy
         
 
 networks:
