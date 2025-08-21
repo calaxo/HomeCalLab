@@ -1,106 +1,100 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
 # ================================================================
 # immich-backups.sh
-# Gère le volume Docker des backups Immich (sans montages sur l'hôte)
-#   - Liste:      ./immich-backups.sh --list
-#   - Restore:    DB_USERNAME=... DB_PASSWORD=... ./immich-backups.sh --restore <fichier.sql.gz|fichier.dump>
-#   - Copier in:  ./immich-backups.sh --copy-from ./mon-backup.sql.gz
+# Gère le volume Docker des backups Immich (sans montages hôte)
 #
-# Par défaut:
-#   VOLUME=immich_backups   (volume docker où Immich met ses exports)
-#   NET=immich_net          (réseau docker interne de la stack Immich)
-#   DBHOST=immich_postgres  (nom du conteneur DB)
-#   DBNAME=postgres         (base cible pour le restore)
-#   IMG=postgres:16         (image client psql/pg_restore)
+# Usage :
+#   ./immich-backups.sh --list
+#   ./immich-backups.sh --copy-from ./mon-backup.sql.gz
+#   ./immich-backups.sh --restore export-2025-08-21.sql.gz --user postgres --password postgres
 #
-# Tu peux override en env: VOLUME=... NET=... DBHOST=... DBNAME=... IMG=...
+# Options (par défaut, override via --flags) :
+#   --volume   Nom du volume (defaut: immich_backups)
+#   --net      Réseau docker (defaut: immich_net)
+#   --host     Nom du conteneur DB (defaut: immich_postgres)
+#   --db       Nom de la base (defaut: postgres)
+#   --user     Utilisateur DB
+#   --password Mot de passe DB
 # ================================================================
 
-VOLUME="${VOLUME:-immich_backups}"
-NET="${NET:-immich_net}"
-DBHOST="${DBHOST:-immich_postgres}"
-DBNAME="${DBNAME:-postgres}"
-IMG="${IMG:-postgres:16}"
+VOLUME="immich_backups"
+NET="immich_net"
+DBHOST="immich_postgres"
+DBNAME="postgres"
+DBUSER=""
+DBPASS=""
+FILE=""
+MODE=""
 
 usage() {
   cat <<EOF
 Usage:
-  $(basename "$0") --list
-  DB_USERNAME=... DB_PASSWORD=... $(basename "$0") --restore <fichier.sql.gz|fichier.dump>
-  $(basename "$0") --copy-from </chemin/local/vers/fichier>
+  $0 --list
+  $0 --copy-from <fichier_local>
+  $0 --restore <fichier.sql.gz|fichier.dump> --user <DB_USER> --password <DB_PASS>
 
-Options env:
-  VOLUME=$VOLUME   NET=$NET   DBHOST=$DBHOST   DBNAME=$DBNAME   IMG=$IMG
+Options :
+  --volume <nom>    Volume docker (defaut: $VOLUME)
+  --net <nom>       Réseau docker (defaut: $NET)
+  --host <nom>      Conteneur DB (defaut: $DBHOST)
+  --db <nom>        Base de données (defaut: $DBNAME)
 EOF
 }
 
-need() { command -v "$1" >/dev/null 2>&1 || { echo "Commande '$1' introuvable"; exit 1; }; }
+# --- Parse args ---
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --list) MODE="list"; shift ;;
+    --copy-from) MODE="copy"; FILE="${2:-}"; shift 2 ;;
+    --restore) MODE="restore"; FILE="${2:-}"; shift 2 ;;
+    --volume) VOLUME="${2:-}"; shift 2 ;;
+    --net) NET="${2:-}"; shift 2 ;;
+    --host) DBHOST="${2:-}"; shift 2 ;;
+    --db) DBNAME="${2:-}"; shift 2 ;;
+    --user) DBUSER="${2:-}"; shift 2 ;;
+    --password) DBPASS="${2:-}"; shift 2 ;;
+    -h|--help) usage; exit 0 ;;
+    *) echo "Arg inconnu: $1"; usage; exit 1 ;;
+  esac
+done
 
+# --- Fonctions ---
 list_backups() {
   docker run --rm -v "${VOLUME}":/b alpine:3 sh -lc 'ls -lah /b || true'
 }
 
 copy_from() {
-  local src="$1"
-  [[ -f "$src" ]] || { echo "Fichier local introuvable: $src"; exit 1; }
+  [[ -n "$FILE" ]] || { echo "Chemin local manquant"; exit 1; }
+  [[ -f "$FILE" ]] || { echo "Fichier introuvable: $FILE"; exit 1; }
   docker run --rm -v "$(pwd)":/from -v "${VOLUME}":/b alpine:3 \
-    sh -lc 'cp -a "/from/'"$(basename "$src")"'" /b && ls -lh /b'
+    sh -lc 'cp -a "/from/'"$(basename "$FILE")"'" /b && ls -lh /b'
 }
 
 restore_backup() {
-  local file="$1"
-  [[ -n "${DB_USERNAME:-}" ]] || { echo "DB_USERNAME manquant (exporte-le en variable d'environnement)"; exit 1; }
-  [[ -n "${DB_PASSWORD:-}" ]] || { echo "DB_PASSWORD manquant (exporte-le en variable d'environnement)"; exit 1; }
+  [[ -n "$FILE" ]] || { echo "--restore <fichier> requis"; exit 1; }
+  [[ -n "$DBUSER" ]] || { echo "--user requis"; exit 1; }
+  [[ -n "$DBPASS" ]] || { echo "--password requis"; exit 1; }
 
-  echo "[*] Test présence du fichier dans le volume ${VOLUME}: $file"
-  docker run --rm -v "${VOLUME}":/b alpine:3 sh -lc '[ -f "/b/'"$file"'" ] || { echo "Fichier absent dans le volume"; exit 2; }'
-
-  if [[ "$file" == *.sql.gz ]]; then
-    echo "[*] Restore .sql.gz -> psql (avec sed du search_path)"
-    docker run --rm --network "${NET}" \
-      -e "PGPASSWORD=${DB_PASSWORD}" \
-      -v "${VOLUME}":/backup \
-      "${IMG}" bash -lc \
-      'gunzip -c "/backup/'"$file"'" \
-       | sed "s/SELECT pg_catalog.set_config('\''search_path'\'', '\'''\'' , false);/SELECT pg_catalog.set_config('\''search_path'\'', '\''public, pg_catalog'\'', true);/g" \
-       | psql -h '"${DBHOST}"' -U '"${DB_USERNAME}"' -d '"${DBNAME}"''
-  elif [[ "$file" == *.dump ]]; then
-    echo "[*] Restore .dump -> pg_restore"
-    docker run --rm --network "${NET}" \
-      -e "PGPASSWORD=${DB_PASSWORD}" \
-      -v "${VOLUME}":/backup \
-      "${IMG}" pg_restore -h "${DBHOST}" -U "${DB_USERNAME}" -d "${DBNAME}" --clean --if-exists "/backup/${file}"
+  echo "[*] Restore $FILE depuis $VOLUME → $DBHOST/$DBNAME"
+  if [[ "$FILE" == *.sql.gz ]]; then
+    docker run --rm --network "$NET" -e PGPASSWORD="$DBPASS" -v "$VOLUME":/backup postgres:16 \
+      bash -lc 'gunzip -c "/backup/'"$FILE"'" \
+      | sed "s/SELECT pg_catalog.set_config('\''search_path'\'', '\'''\'' , false);/SELECT pg_catalog.set_config('\''search_path'\'', '\''public, pg_catalog'\'', true);/g" \
+      | psql -h '"$DBHOST"' -U '"$DBUSER"' -d '"$DBNAME"''
+  elif [[ "$FILE" == *.dump ]]; then
+    docker run --rm --network "$NET" -e PGPASSWORD="$DBPASS" -v "$VOLUME":/backup postgres:16 \
+      pg_restore -h "$DBHOST" -U "$DBUSER" -d "$DBNAME" --clean --if-exists "/backup/$FILE"
   else
     echo "Extension non supportée (attendu .sql.gz ou .dump)"; exit 1
   fi
-
   echo "[OK] Restore terminé."
 }
 
-main() {
-  need docker
-  [[ $# -ge 1 ]] || { usage; exit 1; }
-
-  case "${1:-}" in
-    --list)
-      list_backups
-      ;;
-    --copy-from)
-      [[ $# -ge 2 ]] || { echo "--copy-from <fichier_local>"; exit 1; }
-      copy_from "$2"
-      ;;
-    --restore)
-      [[ $# -ge 2 ]] || { echo "--restore <fichier.sql.gz|fichier.dump>"; exit 1; }
-      restore_backup "$2"
-      ;;
-    -h|--help)
-      usage
-      ;;
-    *)
-      usage; exit 1 ;;
-  esac
-}
-
-main "$@"
+# --- Dispatcher ---
+case "$MODE" in
+  list) list_backups ;;
+  copy) copy_from ;;
+  restore) restore_backup ;;
+  *) usage; exit 1 ;;
+esac
