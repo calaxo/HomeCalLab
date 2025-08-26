@@ -24,6 +24,7 @@ services:
       - immich_uploads2:/data2/upload
       - immich_backups2:/data/backups
       - /etc/localtime:/etc/localtime:ro
+      - immich_external2:/mnt/photos2:ro 
 
     ports:
       - '2284:2283'
@@ -106,6 +107,8 @@ volumes:
   immich_internal2:
     external: true
   immich_backups2:
+    external: true
+  immich_external2:
     external: true
   pgdata2:
     
