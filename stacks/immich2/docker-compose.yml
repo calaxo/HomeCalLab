@@ -7,11 +7,11 @@
 #
 # The compose file on main may not be compatible with the latest release.
 
-name: immich2
+name: immich
 
 services:
-  immich-server2:
-    container_name: immich_server2
+  immich-server:
+    container_name: immich_server
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
     # environment:
     #   - DB_SKIP_MIGRATIONS=true
@@ -28,17 +28,17 @@ services:
     ports:
       - '2283:2283'
     depends_on:
-      - redis2
-      - database2
+      - redis
+      - database
     restart: always
     healthcheck:
       disable: false
     networks:
-      - immich_net2
+      - immich_net
       - proxy
 
-  immich-machine-learning2:
-    container_name: immich_machine_learning2
+  immich-machine-learning:
+    container_name: immich_machine_learning
     # For hardware acceleration, add one of -[armnn, cuda, rocm, openvino, rknn] to the image tag.
     # Example tag: ${IMMICH_VERSION:-release}-cuda
     image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}
@@ -48,23 +48,23 @@ services:
     volumes:
       - model-cache:/cache
     networks:
-      - immich_net2
+      - immich_net
 
     restart: always
     healthcheck:
       disable: false
 
-  redis2:
-    container_name: immich_redis2
+  redis:
+    container_name: immich_redis
     image: docker.io/valkey/valkey:8-bookworm@sha256:5b8f8c333bef895c925f56629d6ba90aea95a4f7391f62411e625267c600b19c
     healthcheck:
       test: redis-cli ping || exit 1
     restart: always
     networks:
-      - immich_net2
+      - immich_net
 
-  database2:
-    container_name: immich_postgres2
+  database:
+    container_name: immich_postgres
     image: ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0@sha256:32324a2f41df5de9efe1af166b7008c3f55646f8d0e00d9550c16c9822366b4a
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -81,15 +81,29 @@ services:
     shm_size: 128mb
     restart: always
     networks:
-      - immich_net2
+      - immich_net
 
-
+  pgadmin4:
+    image: elestio/pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${ADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${ADMIN_PASSWORD}
+      PGADMIN_LISTEN_PORT: 8080
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./servers.json:/pgadmin4/servers.json
+      - immich_backups:/backup:ro 
+    networks:
+      - immich_net
+      - proxy
         
 
 networks:
   # réseau interne dédié à Immich
-  immich_net2:
-    name: immich_net2
+  immich_net:
+    name: immich_net
     driver: bridge
   # réseau externe partagé par ton reverse-proxy
   proxy:
@@ -101,11 +115,11 @@ volumes:
   model-cache:
     
     # --- Volume NFS pour les uploads Immich ---
-  immich_uploads2:
+  immich_uploads:
     external: true
-  immich_internal2:
+  immich_internal:
     external: true
-  immich_backups2:
+  immich_backups:
     external: true
   pgdata:
     
