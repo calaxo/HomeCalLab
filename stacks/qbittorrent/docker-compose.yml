@@ -9,7 +9,7 @@ services:
       - WEBUI_PORT=8081
       - TORRENTING_PORT=6881
     volumes:
-      - torrentconfig:/plugin
+      - torrentconfig:/config/qBittorrent/nova3/engines
       - torrentfiles:/downloads #optional
     ports:
       - 8081:8081
