@@ -7,11 +7,11 @@
 #
 # The compose file on main may not be compatible with the latest release.
 
-name: immich
+name: immich2
 
 services:
-  immich-server:
-    container_name: immich_server
+  immich-server2:
+    container_name: immich_server2
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
     # environment:
     #   - DB_SKIP_MIGRATIONS=true
@@ -34,11 +34,11 @@ services:
     healthcheck:
       disable: false
     networks:
-      - immich_net
+      - immich_net2
       - proxy
 
-  immich-machine-learning:
-    container_name: immich_machine_learning
+  immich-machine-learning2:
+    container_name: immich_machine_learning2
     # For hardware acceleration, add one of -[armnn, cuda, rocm, openvino, rknn] to the image tag.
     # Example tag: ${IMMICH_VERSION:-release}-cuda
     image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}
@@ -48,23 +48,23 @@ services:
     volumes:
       - model-cache:/cache
     networks:
-      - immich_net
+      - immich_net2
 
     restart: always
     healthcheck:
       disable: false
 
-  redis:
-    container_name: immich_redis
+  redis2:
+    container_name: immich_redis2
     image: docker.io/valkey/valkey:8-bookworm@sha256:5b8f8c333bef895c925f56629d6ba90aea95a4f7391f62411e625267c600b19c
     healthcheck:
       test: redis-cli ping || exit 1
     restart: always
     networks:
-      - immich_net
+      - immich_net2
 
-  database:
-    container_name: immich_postgres
+  database2:
+    container_name: immich_postgres2
     image: ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0@sha256:32324a2f41df5de9efe1af166b7008c3f55646f8d0e00d9550c16c9822366b4a
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -81,15 +81,15 @@ services:
     shm_size: 128mb
     restart: always
     networks:
-      - immich_net
+      - immich_net2
 
 
         
 
 networks:
   # réseau interne dédié à Immich
-  immich_net:
-    name: immich_net
+  immich_net2:
+    name: immich_net2
     driver: bridge
   # réseau externe partagé par ton reverse-proxy
   proxy:
@@ -98,16 +98,16 @@ networks:
 
 
 volumes:
-  model-cache:
+  model-cache2:
     
     # --- Volume NFS pour les uploads Immich ---
-  immich_uploads:
+  immich_uploads2:
     external: true
-  immich_internal:
+  immich_internal2:
     external: true
-  immich_backups:
+  immich_backups2:
     external: true
-  pgdata:
+  pgdata2:
     
       
 
