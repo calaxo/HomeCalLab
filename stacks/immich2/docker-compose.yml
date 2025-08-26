@@ -20,9 +20,9 @@ services:
     #   service: cpu # set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding
     volumes:
       # Do not edit the next line. If you want to change the media storage location on your system, edit the value of UPLOAD_LOCATION in the .env file
-      - immich_internal:/data
-      - immich_uploads:/data2/upload
-      - immich_backups:/data/backups
+      - immich_internal2:/data
+      - immich_uploads2:/data2/upload
+      - immich_backups2:/data/backups
       - /etc/localtime:/etc/localtime:ro
 
     ports:
@@ -46,7 +46,7 @@ services:
     #   file: hwaccel.ml.yml
     #   service: cpu # set to one of [armnn, cuda, rocm, openvino, openvino-wsl, rknn] for accelerated inference - use the `-wsl` version for WSL2 where applicable
     volumes:
-      - model-cache:/cache
+      - model-cache2:/cache
     networks:
       - immich_net2
 
@@ -76,8 +76,8 @@ services:
     volumes:
       # Do not edit the next line. If you want to change the database storage location on your system, edit the value of DB_DATA_LOCATION in the .env file
       - ${DB_DATA_LOCATION}:/var/lib/postgresql/data
-      - immich_backups:/backup:ro 
-      - pgdata:/var/lib/postgresql/data
+      - immich_backups2:/backup:ro 
+      - pgdata2:/var/lib/postgresql/data
     shm_size: 128mb
     restart: always
     networks:
