@@ -26,7 +26,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
 
     ports:
-      - '2283:2283'
+      - '2284:2283'
     depends_on:
       - redis
       - database
@@ -83,21 +83,7 @@ services:
     networks:
       - immich_net
 
-  pgadmin4:
-    image: elestio/pgadmin
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${ADMIN_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${ADMIN_PASSWORD}
-      PGADMIN_LISTEN_PORT: 8080
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./servers.json:/pgadmin4/servers.json
-      - immich_backups:/backup:ro 
-    networks:
-      - immich_net
-      - proxy
+
         
 
 networks:
