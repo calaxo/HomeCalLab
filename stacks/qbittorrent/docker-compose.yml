@@ -9,7 +9,7 @@ services:
       - WEBUI_PORT=8081
       - TORRENTING_PORT=6881
     volumes:
-      # - torrentconfig:/config
+      - torrentconfig:/plugin
       - torrentfiles:/downloads #optional
     ports:
       - 8081:8081
