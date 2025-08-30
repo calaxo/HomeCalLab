@@ -9,10 +9,10 @@ services:
     depends_on:
       - mongo
     environment:
-      API_ENDPOINT: http://localhost:8080 # This MUST be included as a valid URL in the spotify dashboard (see below)
-      CLIENT_ENDPOINT: http://localhost:3000
-      SPOTIFY_PUBLIC: __your_spotify_client_id__
-      SPOTIFY_SECRET: __your_spotify_secret__
+      API_ENDPOINT: http://192.168.1.170:8080 # This MUST be included as a valid URL in the spotify dashboard (see below)
+      CLIENT_ENDPOINT: http://192.168.1.170:3000
+      SPOTIFY_PUBLIC: ${SPOTIFY_ID}
+      SPOTIFY_SECRET: ${SPOTIFY_SECRET}
   mongo:
     container_name: mongo
     image: mongo:6
@@ -25,4 +25,4 @@ services:
     ports:
       - "3000:3000"
     environment:
-      API_ENDPOINT: http://localhost:8080
+      API_ENDPOINT: http://192.168.1.170:8080
