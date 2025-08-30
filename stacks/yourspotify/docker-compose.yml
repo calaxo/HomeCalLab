@@ -1,6 +1,6 @@
 services:
   server:
-    image: yooooomi/your_spotify_server
+    image: lscr.io/linuxserver/your_spotify:latest
     restart: always
     ports:
       - "8080:8080"
@@ -9,10 +9,11 @@ services:
     depends_on:
       - mongo
     environment:
-      API_ENDPOINT: http://192.168.1.170:8080 # This MUST be included as a valid URL in the spotify dashboard (see below)
-      CLIENT_ENDPOINT: http://192.168.1.170:3000
+      APP_URL: http://192.168.1.170:8080 # This MUST be included as a valid URL in the spotify dashboard (see below)
+      CORS : http://192.168.1.170:8080
       SPOTIFY_PUBLIC: ${SPOTIFY_ID}
       SPOTIFY_SECRET: ${SPOTIFY_SECRET}
+      MONGO_ENDPOINT : mongodb://mongo:27017/your_spotify
   
   # erreur pas d'avx sur mes xeon
   # :4.4.6
@@ -29,3 +30,5 @@ services:
       - "3000:3000"
     environment:
       API_ENDPOINT: http://192.168.1.170:8080
+
+
