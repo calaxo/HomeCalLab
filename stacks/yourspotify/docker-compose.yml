@@ -9,14 +9,17 @@ services:
     depends_on:
       - mongo
     environment:
-      API_ENDPOINT: https://192.168.1.170:8080 # This MUST be included as a valid URL in the spotify dashboard (see below)
-      CLIENT_ENDPOINT: https://192.168.1.170:3000
+      #127.0.0.1
+      #192.168.1.170
+      API_ENDPOINT: http://192.168.1.170:8080 # This MUST be included as a valid URL in the spotify dashboard (see below)
+      CLIENT_ENDPOINT: http://192.168.1.170:3000
       SPOTIFY_PUBLIC: ${SPOTIFY_ID}
       SPOTIFY_SECRET: ${SPOTIFY_SECRET}
 
   
   # erreur pas d'avx sur mes xeon
   # :4.4.6
+  #a ba si
   mongo:
     container_name: mongo
     image: mongo:6
@@ -29,4 +32,4 @@ services:
     ports:
       - "3000:3000"
     environment:
-      API_ENDPOINT: https://192.168.1.170:8080
+      API_ENDPOINT: http://192.168.1.170:8080

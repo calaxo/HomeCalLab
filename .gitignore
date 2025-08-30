@@ -2,3 +2,4 @@ stacks/immich/.env
 stacks/immich2/.env
 stacks/immich2/.env
 stacks/yourspotify/.env
+/stacks/yourspotify/your_spotify_db
