@@ -13,8 +13,10 @@ services:
       CLIENT_ENDPOINT: http://192.168.1.170:3000
       SPOTIFY_PUBLIC: ${SPOTIFY_ID}
       SPOTIFY_SECRET: ${SPOTIFY_SECRET}
+  
+  # erreur pas d'avx sur mes xeon
   mongo:
-    container_name: mongo
+    container_name: mongo:4.4.6
     image: mongo:6
     volumes:
       - ./your_spotify_db:/data/db
