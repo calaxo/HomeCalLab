@@ -15,8 +15,9 @@ services:
       SPOTIFY_SECRET: ${SPOTIFY_SECRET}
   
   # erreur pas d'avx sur mes xeon
+  # :4.4.6
   mongo:
-    container_name: mongo:4.4.6
+    container_name: mongo
     image: mongo:6
     volumes:
       - ./your_spotify_db:/data/db
