@@ -9,7 +9,7 @@ services:
     # volumes:
       # - /root/my-config.yml:/app/user-data/conf.yml
     ports:
-      - 8080:8080
+      - 3180:8080
     # Set any environmental variables
     environment:
       - NODE_ENV=production
