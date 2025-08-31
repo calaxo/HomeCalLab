@@ -11,7 +11,7 @@ services:
       - /opt/omd/sites/cmk/tmp:uid=1000,gid=1000
     ports:
       - 8080:5000
-      - 8000:8000
+      - 8500:8000
     restart: always
 
 volumes:
