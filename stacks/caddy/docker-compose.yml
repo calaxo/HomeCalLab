@@ -8,8 +8,8 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - caddyconfig:/etc/caddy/:ro
-      - caddy_data:/data
+      - caddyconfig/config:/etc/caddy/:ro
+      - caddyconfig/cert:/data
       - caddy_config:/config
 
 networks:
