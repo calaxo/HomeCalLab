@@ -1,0 +1,24 @@
+# API Your Spotify
+spotify.home.lan {
+    tls internal
+    reverse_proxy your_spotify_server:8080
+}
+
+# UI Your Spotify
+client.home.lan {
+    tls internal
+    reverse_proxy your_spotify_client:3000
+}
+
+# (exemples que tu peux activer plus tard)
+# Immich
+# photos.home.lan {
+#     tls internal
+#     reverse_proxy immich_server:2283
+# }
+
+# Nextcloud
+# cloud.home.lan {
+#     tls internal
+#     reverse_proxy nextcloud-web:80
+# }

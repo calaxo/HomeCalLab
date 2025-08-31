@@ -2,8 +2,8 @@ services:
   server:
     image: yooooomi/your_spotify_server
     restart: always
-    ports:
-      - "8080:8080"
+    # ports:
+    #   - "8080:8080"
     links:
       - mongo
     depends_on:
@@ -11,10 +11,11 @@ services:
     environment:
       #127.0.0.1
       #192.168.1.170
-      API_ENDPOINT: http://192.168.1.170:8080 # This MUST be included as a valid URL in the spotify dashboard (see below)
-      CLIENT_ENDPOINT: http://192.168.1.170:3000
+      API_ENDPOINT: https://spotify.home.lan # This MUST be included as a valid URL in the spotify dashboard (see below)
+      CLIENT_ENDPOINT: https://client.home.lan
       SPOTIFY_PUBLIC: ${SPOTIFY_ID}
       SPOTIFY_SECRET: ${SPOTIFY_SECRET}
+    networks: [proxy]
 
   
   # erreur pas d'avx sur mes xeon
@@ -29,7 +30,14 @@ services:
   web:
     image: yooooomi/your_spotify_client
     restart: always
-    ports:
-      - "3000:3000"
+    # ports:
+    #   - "3000:3000"
     environment:
-      API_ENDPOINT: http://192.168.1.170:8080
+      API_ENDPOINT: https://spotify.home.lan
+    networks: [proxy]
+
+
+networks:
+  proxy:
+    external: true
+    name: proxy
