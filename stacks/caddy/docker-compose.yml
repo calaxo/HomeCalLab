@@ -8,7 +8,17 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - caddyconfig:/etc/caddy/:ro
+      - type: volume
+        source: caddy_cert
+        target: /data
+        volume:
+          nocopy: true
+      - type: volume
+        source: caddy_config
+        target: /etc/caddy
+        read_only: true
+        volume:
+          nocopy: true
       - caddycert:/data
       - caddy_config:/config
 
