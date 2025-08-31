@@ -17,7 +17,9 @@ services:
       SPOTIFY_SECRET: ${SPOTIFY_SECRET}
       CORS : https://client.home.lan
       MONGO_ENDPOINT	: mongodb://mongo:27017/your_spotify
-    networks: [proxy]
+    networks:
+      - your_spotify
+      - proxy
 
   
   # erreur pas d'avx sur mes xeon
@@ -28,6 +30,8 @@ services:
     image: mongo:6
     volumes:
       - ./your_spotify_db:/data/db
+    networks:
+      - your_spotify
 
   web:
     container_name: your_spotify_client
@@ -37,10 +41,13 @@ services:
     #   - "3000:3000"
     environment:
       API_ENDPOINT: https://spotify.home.lan
-    networks: [proxy]
+    networks:
+      - your_spotify
+      - proxy
 
 
 networks:
   proxy:
     external: true
     name: proxy
+  your_spotify:
