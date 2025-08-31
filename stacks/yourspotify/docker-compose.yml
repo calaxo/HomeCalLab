@@ -16,6 +16,7 @@ services:
       CLIENT_ENDPOINT: https://client.home.lan
       SPOTIFY_PUBLIC: ${SPOTIFY_ID}
       SPOTIFY_SECRET: ${SPOTIFY_SECRET}
+      CORS : https://client.home.lan
     networks: [proxy]
 
   
