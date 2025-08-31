@@ -1,5 +1,6 @@
 services:
   server:
+    container_name: your_spotify_server 
     image: yooooomi/your_spotify_server
     restart: always
     # ports:
@@ -28,6 +29,7 @@ services:
       - ./your_spotify_db:/data/db
 
   web:
+    container_name: your_spotify_client
     image: yooooomi/your_spotify_client
     restart: always
     # ports:
