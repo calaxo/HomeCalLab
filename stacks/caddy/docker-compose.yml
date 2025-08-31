@@ -8,8 +8,8 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - caddyconfig/config:/etc/caddy/:ro
-      - caddyconfig/cert:/data
+      - caddyconfig:/etc/caddy/:ro
+      - caddycert/cert:/data
       - caddy_config:/config
 
 networks:
@@ -21,4 +21,5 @@ volumes:
   caddy_config:
   caddyconfig:
     external: true
-      
+  caddycert:
+    external: true
