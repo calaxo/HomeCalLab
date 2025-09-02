@@ -26,7 +26,7 @@ services:
     devices:
       - /dev/net/tun:/dev/net/tun
     environment:
-      - TZ=${TZ}
+      - TZ=Etc/UTC
       - VPN_SERVICE_PROVIDER=protonvpn
       - VPN_TYPE=openvpn
       - OPENVPN_USER=${OPENVPN_USER}
