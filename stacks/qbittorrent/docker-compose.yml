@@ -10,8 +10,8 @@ services:
     volumes:
       - torrentconfig:/config/qBittorrent/nova3/engines
       - torrentfiles:/downloads #optional
-    ports:
-      - 8081:8081
+    # ports:
+    #   - 8081:8081
     network_mode: "service:protonvpn"
     depends_on:
       - protonvpn
@@ -36,8 +36,8 @@ services:
       - VPN_PORT_FORWARDING_UP_COMMAND=/bin/sh -c '/usr/bin/wget -O- --retry-connrefused --post-data "json={\"listen_port\":{{PORTS}}}" http://127.0.0.1:8081/api/v2/app/setPreferences 2>&1'
     volumes:
       - ./vpn:/gluetun
-    # ports:
-    #   - 8081:8081
+    ports:
+      - 8081:8081
     restart: unless-stopped
     
   
