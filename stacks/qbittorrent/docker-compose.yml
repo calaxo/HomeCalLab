@@ -38,6 +38,7 @@ services:
       - ./vpn:/gluetun
     ports:
       - 8081:8081
+      - 9117:9117
     restart: unless-stopped
     
   
@@ -53,8 +54,9 @@ services:
     volumes:
       - /srv/jackett/config:/config
       - /srv/jackett/blackhole:/downloads
-    ports:
-      - 9117:9117
+    network_mode: "service:protonvpn"
+    # ports:
+    #   - 9117:9117
     restart: unless-stopped
 
 volumes:
