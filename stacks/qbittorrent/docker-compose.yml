@@ -7,7 +7,6 @@ services:
       - PGID=1000
       - TZ=Etc/UTC
       - WEBUI_PORT=8081
-      - TORRENTING_PORT=6881
     volumes:
       - torrentconfig:/config/qBittorrent/nova3/engines
       - torrentfiles:/downloads #optional
@@ -38,7 +37,7 @@ services:
     volumes:
       - ./vpn:/gluetun
     ports:
-      - ${QBITTORRENT_WEBUI_PORT}:${QBITTORRENT_WEBUI_PORT}
+      - 8081:8081
     restart: unless-stopped
     
   
