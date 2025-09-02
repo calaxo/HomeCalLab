@@ -4,3 +4,6 @@ my public(to force meto make secure thing) homelab with proxmox as hypervisor, t
 
 
 curl -fsSL https://raw.githubusercontent.com/calaxo/HomeCalLab/main/scripts/bootstrap.sh | sudo bash
+
+
+curl -fsSL https://raw.githubusercontent.com/calaxo/HomeCalLab/main/scripts/share.sh | sudo bash
