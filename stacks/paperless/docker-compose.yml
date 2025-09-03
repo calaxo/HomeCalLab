@@ -38,7 +38,7 @@ services:
       - pgdata:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: paperless
-      POSTGRES_USER: paperless
+      POSTGRES_USER: ${PG_USER}
       POSTGRES_PASSWORD: ${PG_PASSWORD}
   webserver:
     image: ghcr.io/paperless-ngx/paperless-ngx:latest
