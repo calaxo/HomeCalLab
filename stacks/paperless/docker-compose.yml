@@ -55,10 +55,12 @@ services:
       - /mnt/PERSO/trilium/consume:/usr/src/paperless/consume
     environment:
       PAPERLESS_REDIS: redis://broker:6379
-      PAPERLESS_DBENGINE: mariadb
+      PAPERLESS_OCR_LANGUAGE : fra
+      PAPERLESS_TIME_ZONE : Europe/Paris
       PAPERLESS_DBHOST: db
       PAPERLESS_DBUSER: ${PG_USER}
       PAPERLESS_DBPASS: ${PG_PASSWORD}
+      PAPERLESS_SECRET_KEY : ${PAPERLESS_SECRET_KEY}
       PAPERLESS_DBPORT: 5432
       PAPERLESS_TIKA_ENABLED: 1
       PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://gotenberg:3000
