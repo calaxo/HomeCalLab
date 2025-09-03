@@ -5,3 +5,4 @@ stacks/yourspotify/.env
 /stacks/yourspotify/your_spotify_db
 stacks/endurain/.env
 stacks/paperless/.env
+stacks/n8n/.env
