@@ -17,7 +17,7 @@ services:
       - /mnt/PERSO/endurain/data:/app/backend/data # necessary for activity files, user images and server images persistence on container image updates
       - /mnt/PERSO/endurain/logs:/app/backend/logs # log files for the backend
     ports:
-      - "8080:8080"
+      - "8089:8080"
     depends_on:
       postgres:
         condition: service_healthy
