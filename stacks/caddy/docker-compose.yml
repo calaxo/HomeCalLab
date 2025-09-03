@@ -8,22 +8,11 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - caddyconfig:/etc/caddy/:ro
-      - type: volume
-        source: caddycert
-        target: /data
-        volume:
-          nocopy: true
-      - caddy_config:/config
+      - /mnt/PERSO/caddy/config:/etc/caddy/:ro
+
+      - /mnt/PERSO/caddy/cert:/config
 
 networks:
   proxy:
     external: true # le réseau 'proxy' existe déjà (sinon: docker network create proxy)
 
-volumes:
-  caddy_data:
-  caddy_config:
-  caddyconfig:
-    external: true
-  caddycert:
-    external: true
