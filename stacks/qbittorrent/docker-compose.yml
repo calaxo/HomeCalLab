@@ -59,8 +59,3 @@ services:
     #   - 9117:9117
     restart: unless-stopped
 
-volumes:
-  torrentconfig:
-    external: true
-  torrentfiles:
-    external: true
