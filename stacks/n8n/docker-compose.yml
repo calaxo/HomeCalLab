@@ -15,7 +15,7 @@ services:
       - N8N_RUNNERS_ENABLED=true
       - N8N_SECURE_COOKIES=false
       - NODE_ENV=production
-      - WEBHOOK_URL=http://${SUBDOMAIN}.${DOMAIN_NAME}/
+      - WEBHOOK_URL=http://${DOMAIN_NAME}/
       - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
       - TZ=${GENERIC_TIMEZONE}
     volumes:
