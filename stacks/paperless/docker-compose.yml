@@ -54,8 +54,6 @@ services:
       - /mnt/PERSO/paperless/export:/usr/src/paperless/export
       - /mnt/PERSO/paperless/consume:/usr/src/paperless/consume
     environment:
-      PUID : 1000
-      PGID : 1000
       PAPERLESS_REDIS: redis://broker:6379
       PAPERLESS_OCR_LANGUAGE : fra
       PAPERLESS_TIME_ZONE : Europe/Paris
