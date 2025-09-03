@@ -38,9 +38,9 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - endurain_postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
 
 volumes:
-  postgres_data:
+  endurain_postgres_data:
 
