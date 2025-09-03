@@ -13,7 +13,7 @@ services:
       - N8N_PORT=5678
       - N8N_PROTOCOL=http
       - N8N_RUNNERS_ENABLED=true
-      - N8N_SECURE_COOKIES=false
+      - N8N_SECURE_COOKIE=false
       - NODE_ENV=production
       - WEBHOOK_URL=http://${DOMAIN_NAME}/
       - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
