@@ -54,6 +54,8 @@ services:
       - /mnt/PERSO/trilium/export:/usr/src/paperless/export
       - /mnt/PERSO/trilium/consume:/usr/src/paperless/consume
     environment:
+      PUID : 1000
+      PGID : 1000
       PAPERLESS_REDIS: redis://broker:6379
       PAPERLESS_OCR_LANGUAGE : fra
       PAPERLESS_TIME_ZONE : Europe/Paris
