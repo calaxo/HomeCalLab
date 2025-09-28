@@ -5,7 +5,7 @@ set -euo pipefail
 TRUENAS_IP="${1:-}"
 POOL_PATH="${2:-}"
 MOUNT_BASE="/mnt"                            # où monter sur ta VM Ubuntu
-SHARES=("WEB" "RISK" "SECU" "PERSO")         # tes 4 exports
+SHARES=("WEB" "RISK" "SECU" "PERSO" "film" "serie")         # tes 4 exports
 
 # === CHECK PARAMS ===
 if [[ -z "$TRUENAS_IP" || -z "$POOL_PATH" ]]; then
@@ -28,7 +28,7 @@ sudo cp /etc/fstab /etc/fstab.bak.$(date +%F-%H%M)
 
 # === AJOUT DANS /etc/fstab SI MANQUANT ===
 for share in "${SHARES[@]}"; do
-  LINE="${TRUENAS_IP}:${POOL_PATH}/${share}  ${MOUNT_BASE}/${share}  nfs4  rw,soft,timeo=50,_netdev  0  0"
+  LINE="${TRUENAS_IP}:${POOL_PATH}/${share}  ${MOUNT_BASE}/${share}  nfs4  rw,hard,timeo=50,_netdev  0  0"
   if ! grep -q "${MOUNT_BASE}/${share}" /etc/fstab; then
     echo "$LINE" | sudo tee -a /etc/fstab
   else

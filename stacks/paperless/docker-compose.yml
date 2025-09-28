@@ -35,7 +35,7 @@ services:
     image: docker.io/library/postgres:17
     restart: unless-stopped
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - /mnt/PERSO/paperless/pg:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: paperless
       POSTGRES_USER: ${PG_USER}
