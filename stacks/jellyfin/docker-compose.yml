@@ -11,6 +11,7 @@ services:
       - type: bind
         source: /mnt/film
         target: /media
+        read_only: true
       - type: bind
         source: /mnt/serie
         target: /media2
