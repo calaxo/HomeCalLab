@@ -4,6 +4,8 @@ services:
     container_name: jellyfin
     user: uid:gid
     network_mode: 'host'
+    ports:
+      - 6081:80
     volumes:
       - /mnt/PERSO/jellyfin/config:/config
       - /mnt/PERSO/jellyfin/cache:/cache
