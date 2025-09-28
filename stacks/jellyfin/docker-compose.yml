@@ -8,14 +8,8 @@ services:
     volumes:
       - /mnt/PERSO/jellyfin/config:/config
       - /mnt/PERSO/jellyfin/cache:/cache
-      - type: bind
-        source: /mnt/film
-        target: /media
-        read_only: true
-      - type: bind
-        source: /mnt/serie
-        target: /media2
-        read_only: true
+      - /mnt/film:/media:ro
+      - /mnt/serie:/media2:ro
       # Optional - extra fonts to be used during transcoding with subtitle burn-in
       # - type: bind
       #   source: /path/to/fonts
