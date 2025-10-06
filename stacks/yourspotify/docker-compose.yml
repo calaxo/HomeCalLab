@@ -30,6 +30,7 @@ services:
     image: mongodb/mongodb-community-server:latest
     volumes:
       - /mnt/PERSO/yourspotify/db:/data/db
+      - /mnt/PERSO/yourspotify/configdb:/data/configdb 
     networks:
       - your_spotify
 
