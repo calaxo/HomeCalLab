@@ -8,6 +8,7 @@ services:
       - TZ=Etc/UTC
       - WEBUI_PORT=8081
     volumes:
+      - /mnt/RISK/qbittorrent/main/configconfig:/config
       - /mnt/RISK/qbittorrent/main/config:/config/qBittorrent/nova3/engines
       - /mnt/RISK/qbittorrent/main/files:/downloads #optional
     # ports:
