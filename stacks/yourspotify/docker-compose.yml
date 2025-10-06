@@ -27,7 +27,7 @@ services:
   #a ba si
   mongo:
     container_name: mongo
-    image: mongo:6
+    image: mongo:latest
     volumes:
       - /mnt/PERSO/yourspotify/db:/data/db
     networks:
