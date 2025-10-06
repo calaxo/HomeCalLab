@@ -49,6 +49,11 @@ services:
       - your_spotify
       - proxy
 
+volumes:
+  yourspotifydb:
+    driver: local
+  yourspotifyconfigdb:
+    driver: local
 
 networks:
   proxy:
