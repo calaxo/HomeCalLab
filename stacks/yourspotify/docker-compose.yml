@@ -28,6 +28,9 @@ services:
   mongo:
     container_name: mongo
     image: mongodb/mongodb-community-server:latest
+    environment:
+      - PUID=1000
+      - PGID=1000
     volumes:
       - /mnt/PERSO/yourspotify/db:/data/db
       - /mnt/PERSO/yourspotify/configdb:/data/configdb 
