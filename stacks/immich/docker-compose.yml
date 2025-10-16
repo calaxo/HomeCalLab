@@ -15,7 +15,14 @@ services:
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
     # environment:
     #   - DB_SKIP_MIGRATIONS=true
-    # extends:
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities:
+                - gpu
     #   file: hwaccel.transcoding.yml
     #   service: cpu # set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding
     volumes:
@@ -24,10 +31,10 @@ services:
       - immich_uploads:/data2/upload
       - immich_backups:/data/backups
       - /etc/localtime:/etc/localtime:ro
-      - immich_external:/mnt/photos2:ro 
+      - immich_external:/mnt/photos2:ro
 
     ports:
-      - '2283:2283'
+      - "2283:2283"
     depends_on:
       - redis
       - database
@@ -71,20 +78,18 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_DB: ${DB_DATABASE_NAME}
-      POSTGRES_INITDB_ARGS: '--data-checksums'
+      POSTGRES_INITDB_ARGS: "--data-checksums"
       # Uncomment the DB_STORAGE_TYPE: 'HDD' var if your database isn't stored on SSDs
       # DB_STORAGE_TYPE: 'HDD'
     volumes:
       # Do not edit the next line. If you want to change the database storage location on your system, edit the value of DB_DATA_LOCATION in the .env file
       - ${DB_DATA_LOCATION}:/var/lib/postgresql/data
-      - immich_backups:/backup:ro 
+      - immich_backups:/backup:ro
       - pgdata:/var/lib/postgresql/data
     shm_size: 128mb
     restart: always
     networks:
       - immich_net
-
-
 
 networks:
   # réseau interne dédié à Immich
@@ -96,10 +101,9 @@ networks:
     external: true
     name: proxy
 
-
 volumes:
   model-cache:
-    
+
     # --- Volume NFS pour les uploads Immich ---
   immich_uploads:
     external: true
@@ -110,8 +114,6 @@ volumes:
   immich_backups:
     external: true
   pgdata:
-    
-      
 
   # --- (option) Volume NFS pour dumps DB ---
   # immich_db_backups:
