@@ -15,16 +15,27 @@ services:
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
     # environment:
     #   - DB_SKIP_MIGRATIONS=true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities:
+                - gpu
+                - compute
+                - video
     # extends:
     #   file: hwaccel.transcoding.yml
     #   service: cpu # set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding
     volumes:
-      # Do not edit the next line. If you want to change the media storage location on your system, edit the value of UPLOAD_LOCATION in the .env file
-      - immich_internal2:/data
-      - immich_uploads2:/data2/upload
-      - immich_backups2:/data/backups
+
+
+      - /mnt/PERSO/immich2/data:/data
+      - /mnt/PERSO/immich2/upload:/data2/upload
+      - /mnt/PERSO/immich2/backups:/data/backups
       - /etc/localtime:/etc/localtime:ro
-      - immich_external2:/mnt/photos2:ro 
+      - immich_external2:/mnt/photos2:ro
 
     ports:
       - '2284:2283'
@@ -46,7 +57,14 @@ services:
     # extends: # uncomment this section for hardware acceleration - see https://immich.app/docs/features/ml-hardware-acceleration
     #   file: hwaccel.ml.yml
     #   service: cpu # set to one of [armnn, cuda, rocm, openvino, openvino-wsl, rknn] for accelerated inference - use the `-wsl` version for WSL2 where applicable
-    
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities:
+                - gpu
     volumes:
       - model-cache2:/cache
     networks:
