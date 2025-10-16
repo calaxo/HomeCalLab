@@ -15,8 +15,16 @@ services:
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
     # environment:
     #   - DB_SKIP_MIGRATIONS=true
-    devices:
-      - /dev/dri:/dev/dri
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities:
+                - gpu
+                - compute
+                - video
 
     #   file: hwaccel.transcoding.yml
     #   service: cpu # set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding
